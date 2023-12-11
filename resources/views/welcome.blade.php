@@ -67,7 +67,7 @@
                 <div class="col-6">
                   <div class="custom-box-text text-end">
                     <p>Olga Hernandez</p>
-                    <p>5 participantes</p>
+                    <p>{{ $cantidadParticipantes }} participantes</p>
                     <p>Español</p>
                   </div>
                 </div>
@@ -114,26 +114,27 @@
 </div>
 
 
-            <div id="miSeccion1" class="row mt-4 d-none">
-              <div class="col-12 text-center">
-                  <form id="formDNI">
-                      @csrf
-                      <input type="text" name="dni" id="dni" class="form-control-sm" placeholder="DNI" pattern="\d{8}" title="El DNI debe contener 8 dígitos numéricos" required>
-                      <button type="button" onclick="validarDNI()" class="btn btn-success">Validar DNI</button>
-                  </form>
-              </div>
-          </div>
-            </div>
-          </div>
-      </div>
 
 
-      <div id="miSeccion2" class="row mt-4 d-none mx-auto my-4 text-center">
-    <div class="col-12 text-center ">
-        <form id="formParticipante" method="post">
+
+
+
+
+<div class="row mt-4">
+    <div class="col-12 text-center">
+        <form id="formParticipante" method="post" action="{{ route('participante.registro') }}">
             @csrf
+
+            <!-- Sección 1 - DNI -->
+            <div id="miSeccion1" class="mb-3 d-none">
+                <input type="text" name="dni" id="dni" class="form-control-sm" placeholder="DNI" pattern="\d{8}" title="El DNI debe contener 8 dígitos numéricos" required>
+                <button type="button" onclick="validarDNI()" class="btn btn-success">Validar DNI</button>
+            </div>
+
+            <!-- Sección 2 - Otros datos -->
+            <div id="miSeccion2" class="mb-3 d-none">
             <div class="mb-3">
-                <input type="text" name="nombre" id="nombre" class="form-control-sm" placeholder="NOMBRE Y APELLIDO" required>
+                <input type="text" name="nombre_y_apellido" id="nombre" class="form-control-sm" placeholder="NOMBRE Y APELLIDO" required>
             </div>
 
             <div class="mb-3">
@@ -173,13 +174,40 @@
                     <label class="form-check-label" for="checkbox2">Obligatorio</label>
                 </div>
                 <br>
-            <button type="submit" class="btn btn-info" onclick="" >FIRMAR Y ENVIAR</button>
+                <button type="submit" class="btn btn-info" >FIRMAR Y ENVIAR</button>
+            </div>
+
+            
         </form>
     </div>
 </div>
 
 
-    
+
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+
+
+@if(session('mensaje'))
+    <div class="alert alert-success">
+        {{ session('mensaje') }}
+    </div>
+@endif
+
+
+
+
+
+
+
 
 
 
@@ -193,7 +221,7 @@
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
       <script>
-       function toggleSection() {
+      function toggleSection() {
     const miSeccion = document.getElementById('miSeccion');
 
     if (miSeccion.classList.contains('d-none')) {
@@ -204,24 +232,33 @@
         miSeccion.classList.add('d-none');
     }
 }
+
 function toggleSection1() {
-    document.getElementById('miSeccion').classList.add('d-none');
-    document.getElementById('miSeccion1').classList.remove('d-none');
-    document.getElementById('miSeccion2').classList.add('d-none');
+    const miSeccion1 = document.getElementById('miSeccion1');
+    const miSeccion2 = document.getElementById('miSeccion2');
+
+    // Mostrar la sección de validación de DNI
+    miSeccion1.classList.remove('d-none');
+
+    // Ocultar la sección 2 (si está visible)
+    miSeccion2.classList.add('d-none');
 }
 
 function toggleSection2() {
     document.getElementById('miSeccion2').classList.remove('d-none');
 }
+
 function validarDNI() {
     var dniInput = document.getElementById('dni');
     var dniRegex = /^\d{8}$/;
 
     if (dniRegex.test(dniInput.value)) {
-        toggleSection2();
+        // DNI válido, mostrar la sección 2
+        document.getElementById('miSeccion2').classList.remove('d-none');
     } else {
         alert('El DNI debe contener 8 dígitos numéricos');
     }
+
 }   
 
 

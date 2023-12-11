@@ -8,13 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Participante extends Model
 {
     use HasFactory;
-    var $table = 'participantes'; // Nombre de la tabla en la base de datos
 
-    var $fillable = [
-        'dni',
-        'nombre_y_apellido',
-        'email',
-        'telefono',
-    ];
-
+    protected $table = 'participantes';
+    protected $fillable = ['dni', 'nombre_y_apellido', 'email', 'telefono'];
 }
