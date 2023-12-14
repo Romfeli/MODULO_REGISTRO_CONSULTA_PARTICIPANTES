@@ -12,8 +12,8 @@ return new class extends Migration
             $table->id();
             $table->string('dni')->unique();
             $table->string('nombre_y_apellido');
-            $table->string('email')->unique();
-            $table->string('telefono');
+            $table->string('email')->unique()->email(); // Tipo de dato específico para correo electrónico
+            $table->integer('telefono');
             // ... otros campos ...
             $table->timestamps();
         });

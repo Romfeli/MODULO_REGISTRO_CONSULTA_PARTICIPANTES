@@ -67,7 +67,7 @@
                 <div class="col-6">
                   <div class="custom-box-text text-end">
                     <p>Olga Hernandez</p>
-                    <p>{{ $cantidadParticipantes }} participantes</p>
+                    <p>{{ $participantes->count() }} participantes</p>
                     <p>Español</p>
                   </div>
                 </div>
@@ -193,7 +193,6 @@
         </ul>
     </div>
 @endif
-
 
 
 @if(session('mensaje'))

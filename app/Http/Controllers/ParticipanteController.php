@@ -2,39 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\ParticipanteRequest;
+
+
 use App\Models\Participante;
+
 class ParticipanteController extends Controller
 {
     public function mostrar_participantes()
     {
         $participantes = Participante::all();
-        $cantidadParticipantes = Participante::count();
 
-        return view('welcome', compact('participantes', 'cantidadParticipantes'));
+        return view('welcome', compact('participantes'));
     }
 
-    public function registro(Request $request)
-    {
-        // Validación de datos comunes
-        $rules = [
-            'nombre_y_apellido' => 'required|string|max:255',
-            'email' => 'required|email|unique:participantes|max:255',
-            'telefono' => 'required|string|max:20',
-        ];
+    public function registro(ParticipanteRequest $request)
+        {
+            // Validar los datos usando la solicitud de participante
+            $validatedData = $request->validated();
 
-        // Verificar si el formulario tiene el campo 'dni'
-        if ($request->has('dni')) {
-            // Si tiene 'dni', agregar reglas para el DNI
-            $rules['dni'] = 'required|string|max:255|unique:participantes';
+            // Crear un nuevo participante en la base de datos
+            $participante = new Participante([
+                'dni' => $validatedData['dni'],
+                'nombre_y_apellido' => $validatedData['nombre_y_apellido'],
+                'email' => $validatedData['email'],
+                'telefono' => $validatedData['telefono'],
+                'inputPersonalizado' => $validatedData['inputPersonalizado'],
+                'selectPersonalizado' => $validatedData['selectPersonalizado'],
+                'checkbox1' => $validatedData['checkbox1'],
+                'checkbox2' => $validatedData['checkbox2'],
+            ]);
+
+            $participante->save();
+
+            // Redireccionar o responder según tus necesidades
+            return redirect()->back()->with('mensaje', 'Participante agregado satisfactoriamente');
         }
-
-        $request->validate($rules);
-
-        // Crear un nuevo participante en la base de datos
-        Participante::create($request->all());
-
-        // Redireccionar o responder según tus necesidades
-        return redirect()->back()->with('mensaje', 'Participante agregado satisfactoriamente');
-    }
 }
