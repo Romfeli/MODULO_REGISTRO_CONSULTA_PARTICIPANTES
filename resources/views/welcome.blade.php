@@ -5,12 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MODULO_ALTA_PERSONA</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-   
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
+
+
+
+  
    
 </head>
 <body>
-<style>
+       
+
+  <style>
 
 
   .card {
@@ -49,7 +55,6 @@
 
 
 </style>
-
 
 
       <div class="container">
@@ -122,13 +127,13 @@
 
 <div class="row mt-4">
     <div class="col-12 text-center">
-        <form id="formParticipante" method="post" action="{{ route('participante.registro') }}">
+        <form id="formParticipante" method="post" action="{{ route('participante.store') }}">
             @csrf
 
             <!-- Sección 1 - DNI -->
             <div id="miSeccion1" class="mb-3 d-none">
                 <input type="text" name="dni" id="dni" class="form-control-sm" placeholder="DNI" pattern="\d{8}" title="El DNI debe contener 8 dígitos numéricos" required>
-                <button type="button" onclick="validarDNI()" class="btn btn-success">Validar DNI</button>
+                <button type="button" onclick="validarDNI(); obtenerDatosParticipante();" name="validate_dni" id="validate_dni" class="btn btn-success">Validar DNI</button>
             </div>
 
             <!-- Sección 2 - Otros datos -->
@@ -174,7 +179,7 @@
                     <label class="form-check-label" for="checkbox2">Obligatorio</label>
                 </div>
                 <br>
-                <button type="submit" class="btn btn-info" >FIRMAR Y ENVIAR</button>
+                <button type="submit" class="btn btn-info"  >FIRMAR Y ENVIAR</button>
             </div>
 
             
@@ -184,22 +189,6 @@
 
 
 
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
-
-@if(session('mensaje'))
-    <div class="alert alert-success">
-        {{ session('mensaje') }}
-    </div>
-@endif
 
 
 
@@ -207,20 +196,8 @@
 
 
 
-
-
-
-
-
-
-
-      <!-- Agregar Bootstrap JS y Popper.js al final del cuerpo para garantizar que funcionen correctamente -->
-      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-      <script>
-      function toggleSection() {
+<script>    
+function toggleSection() {
     const miSeccion = document.getElementById('miSeccion');
 
     if (miSeccion.classList.contains('d-none')) {
@@ -244,25 +221,148 @@ function toggleSection1() {
 }
 
 function toggleSection2() {
-    document.getElementById('miSeccion2').classList.remove('d-none');
+    const miSeccion2 = document.getElementById('miSeccion2');
+
+    // Mostrar la sección 2 del formulario
+    miSeccion2.classList.remove('d-none');
 }
+
+
+var $ = jQuery.noConflict();
+// Asignar la función al evento click de un botón con el id 'validate_dni'
+$('#validate_dni').on('click', function () {
+    validarDNI();
+});
 
 function validarDNI() {
     var dniInput = document.getElementById('dni');
     var dniRegex = /^\d{8}$/;
 
     if (dniRegex.test(dniInput.value)) {
-        // DNI válido, mostrar la sección 2
-        document.getElementById('miSeccion2').classList.remove('d-none');
+        toggleSection2();
+
+        $.ajax({
+            url: '/' + dniInput.value,
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                if (data.valido) {
+                    // Si el DNI es válido, hacer otra solicitud para obtener los datos del participante
+                    obtenerDatosParticipante(dniInput.value);
+                } else {
+                    // El DNI es inválido
+                    mostrarError('El DNI ingresado no es válido. Inténtalo de nuevo.');
+                }
+            },
+            error: function () {
+                // Error al verificar el DNI
+                mostrarError('Error al verificar el DNI.');
+            }
+        });
     } else {
-        alert('El DNI debe contener 8 dígitos numéricos');
+        // El formato del DNI es inválido
+        mostrarError('El DNI debe contener 8 dígitos numéricos');
     }
+}
 
-}   
+function mostrarError(mensaje) {
+    // Muestra el mensaje de error en algún lugar de tu interfaz de usuario
+    console.error('Error: ' + mensaje);
+}
+
+function obtenerDatosParticipante(dni) {
+    // Hacer una solicitud AJAX para obtener la información del participante
+    $.ajax({
+        url: '/' + dni,
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            if (data.valido) {
+                // Si el DNI es válido, rellenar el formulario con la información del participante
+                llenarFormulario(data);
+
+                // Verificar si hay un mensaje de éxito y mostrarlo en la interfaz
+                if (data.success) {
+                    mostrarExito(data.mensaje);
+                }
+            } else {
+                // DNI inválido
+                mostrarError('No se encontraron datos para el DNI proporcionado.');
+            }
+        },
+        error: function () {
+            // Error al obtener información del participante
+            mostrarError('Error al obtener información del participante.');
+        }
+    });
+}
+
+function llenarFormulario(data) {
+    // Rellenar el formulario con la información del participante
+    document.getElementById('nombre_y_apellido').value = data.nombre_y_apellido || '';
+    document.getElementById('email').value = data.email || '';
+    document.getElementById('telefono').value = data.telefono || '';
+    // Otras asignaciones según la estructura de tu formulario
+
+    // Marcar el formulario como "modo de actualización"
+    document.getElementById('formParticipante').setAttribute('data-update-mode', 'true');
+}
+
+function mostrarExito(mensaje) {
+    // Muestra el mensaje de éxito en algún lugar de tu interfaz de usuario
+    // Puedes usar alert, console.log, o mostrarlo en una etiqueta en tu HTML, por ejemplo
+    console.log(mensaje);
+}
 
 
-      </script>
-    </body>
+
+
+
+
+
+
+
+
+</script>
+
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+@if(session('mensaje'))
+    <div class="alert alert-success">
+        {{ session('mensaje') }}
+    </div>
+@endif
+
+@if($errors->has('email'))
+    <div class="alert alert-danger">
+        {{ $errors->first('email') }}
+    </div>
+@endif
+
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success')['mensaje'] }}
+    </div>
+@endif
+
+
+
+
+ <!-- Agregar Bootstrap JS y Popper.js al final del cuerpo para garantizar que funcionen correctamente -->
+ <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+     
+
+     
+ 
 
 
 </body>

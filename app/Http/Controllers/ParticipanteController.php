@@ -9,18 +9,26 @@ use App\Models\Participante;
 
 class ParticipanteController extends Controller
 {
-    public function mostrar_participantes()
+    public function show()
     {
         $participantes = Participante::all();
 
         return view('welcome', compact('participantes'));
     }
-
-    public function registro(ParticipanteRequest $request)
-        {
+    public function store(ParticipanteRequest $request)
+    {
+       
             // Validar los datos usando la solicitud de participante
             $validatedData = $request->validated();
-
+    
+            // Verificar si ya existe un participante con la misma DNI
+                      $participanteExistente = Participante::where('dni', $validatedData['dni'])->first();
+    
+            if ($participanteExistente) {
+                // Si existe, redirigir de nuevo al formulario con los datos del participante existente
+                return redirect()->back()->withInput()->withErrors(['dni' => 'El dni ya está registrado.']);
+            }
+    
             // Crear un nuevo participante en la base de datos
             $participante = new Participante([
                 'dni' => $validatedData['dni'],
@@ -32,10 +40,29 @@ class ParticipanteController extends Controller
                 'checkbox1' => $validatedData['checkbox1'],
                 'checkbox2' => $validatedData['checkbox2'],
             ]);
-
+    
             $participante->save();
+    
+            // Enviar una respuesta JSON de éxito (opcional)
+            return redirect('/')->with('success', ['mensaje' => 'Usuario registrado exitosamente']);
+    
 
-            // Redireccionar o responder según tus necesidades
-            return redirect()->back()->with('mensaje', 'Participante agregado satisfactoriamente');
         }
-}
+        public function obtenerInformacionPorDNI($dni)
+        {
+            $participante = Participante::where('dni', $dni)->first();
+        
+            return response()->json($participante);
+        }
+ 
+    }
+
+
+
+
+
+
+
+
+
+

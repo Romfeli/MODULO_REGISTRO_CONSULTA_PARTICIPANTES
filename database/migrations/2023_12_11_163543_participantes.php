@@ -6,18 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up(): void
-    {
-        Schema::create('participantes', function (Blueprint $table) {
-            $table->id();
-            $table->string('dni')->unique();
-            $table->string('nombre_y_apellido');
-            $table->string('email')->unique()->email(); // Tipo de dato específico para correo electrónico
-            $table->integer('telefono');
-            // ... otros campos ...
-            $table->timestamps();
-        });
-    }
+    public function up()
+{
+    Schema::create('participantes', function (Blueprint $table) {
+        $table->id(); // Esto debería configurar 'id' para autoincrementarse
+        $table->string('dni');
+        $table->string('nombre_y_apellido');
+        $table->string('email');
+        $table->string('telefono');
+        $table->timestamps();
+    });
+}
+
 
     public function down(): void
     {
