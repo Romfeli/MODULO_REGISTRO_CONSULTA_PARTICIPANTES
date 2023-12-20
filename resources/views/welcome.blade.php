@@ -228,27 +228,25 @@ function toggleSection2() {
 }
 
 
-var $ = jQuery.noConflict();
-// Asignar la función al evento click de un botón con el id 'validate_dni'
-$('#validate_dni').on('click', function () {
-    validarDNI();
-});
+
 
 function validarDNI() {
     var dniInput = document.getElementById('dni');
     var dniRegex = /^\d{8}$/;
-
+    
     if (dniRegex.test(dniInput.value)) {
-        toggleSection2();
+        var dni = dniInput.value || ''
+        toggleSection2()
 
         $.ajax({
-            url: '/' + dniInput.value,
+            url: 'http://127.0.0.1:8000/' + dni,
             method: 'GET',
             dataType: 'json',
             success: function (data) {
                 if (data.valido) {
                     // Si el DNI es válido, hacer otra solicitud para obtener los datos del participante
                     obtenerDatosParticipante(dniInput.value);
+                    
                 } else {
                     // El DNI es inválido
                     mostrarError('El DNI ingresado no es válido. Inténtalo de nuevo.');
@@ -271,9 +269,8 @@ function mostrarError(mensaje) {
 }
 
 function obtenerDatosParticipante(dni) {
-    // Hacer una solicitud AJAX para obtener la información del participante
     $.ajax({
-        url: '/' + dni,
+        url: 'http://127.0.0.1:8000/' + dni,
         method: 'GET',
         dataType: 'json',
         success: function (data) {
@@ -307,6 +304,8 @@ function llenarFormulario(data) {
     // Marcar el formulario como "modo de actualización"
     document.getElementById('formParticipante').setAttribute('data-update-mode', 'true');
 }
+
+
 
 function mostrarExito(mensaje) {
     // Muestra el mensaje de éxito en algún lugar de tu interfaz de usuario
