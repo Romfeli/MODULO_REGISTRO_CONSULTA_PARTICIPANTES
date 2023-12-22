@@ -6,6 +6,14 @@
     <title>MODULO_ALTA_PERSONA</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<<<<<<< HEAD
+=======
+
+
+
+
+  
+>>>>>>> fc751f8d465a06f06031e2cf7123d54b25f33b7f
    
 </head>
 <body>
@@ -128,13 +136,21 @@
             <!-- Sección 1 - DNI -->
             <div id="miSeccion1" class="mb-3 d-none">
                 <input type="text" name="dni" id="dni" class="form-control-sm" placeholder="DNI" pattern="\d{8}" title="El DNI debe contener 8 dígitos numéricos" required>
+<<<<<<< HEAD
                 <button type="button" onclick="validarDNI();" name="validate_dni" id="validate_dni" class="btn btn-success">Validar DNI</button>
+=======
+                <button type="button" onclick="validarDNI(); obtenerDatosParticipante();" name="validate_dni" id="validate_dni" class="btn btn-success">Validar DNI</button>
+>>>>>>> fc751f8d465a06f06031e2cf7123d54b25f33b7f
             </div>
 
             <!-- Sección 2 - Otros datos -->
             <div id="miSeccion2" class="mb-3 d-none">
             <div class="mb-3">
+<<<<<<< HEAD
                 <input type="text" name="nombre_y_apellido" id="nombre_y_apellido" class="form-control-sm" placeholder="NOMBRE Y APELLIDO" required>
+=======
+                <input type="text" name="nombre_y_apellido" id="nombre" class="form-control-sm" placeholder="NOMBRE Y APELLIDO" required>
+>>>>>>> fc751f8d465a06f06031e2cf7123d54b25f33b7f
             </div>
 
             <div class="mb-3">
@@ -188,6 +204,12 @@
 
 
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> fc751f8d465a06f06031e2cf7123d54b25f33b7f
 <script>    
 function toggleSection() {
     const miSeccion = document.getElementById('miSeccion');
@@ -227,21 +249,39 @@ function validarDNI() {
     var dniRegex = /^\d{8}$/;
     
     if (dniRegex.test(dniInput.value)) {
+<<<<<<< HEAD
         var dni = dniInput.value || '';
 
         toggleSection2();
+=======
+        var dni = dniInput.value || ''
+        toggleSection2()
+>>>>>>> fc751f8d465a06f06031e2cf7123d54b25f33b7f
 
         $.ajax({
             url: 'http://127.0.0.1:8000/' + dni,
             method: 'GET',
             dataType: 'json',
             success: function (data) {
+<<<<<<< HEAD
                 console.log('Datos recibidos:', data);
                 
                 obtenerDatosParticipante(data);
             },
             error: function () {
                 console.log('Error al realizar la solicitud Ajax.');
+=======
+                if (data.valido) {
+                    // Si el DNI es válido, hacer otra solicitud para obtener los datos del participante
+                    obtenerDatosParticipante(dniInput.value);
+                    
+                } else {
+                    // El DNI es inválido
+                    mostrarError('El DNI ingresado no es válido. Inténtalo de nuevo.');
+                }
+            },
+            error: function () {
+>>>>>>> fc751f8d465a06f06031e2cf7123d54b25f33b7f
                 // Error al verificar el DNI
                 mostrarError('Error al verificar el DNI.');
             }
@@ -257,6 +297,7 @@ function mostrarError(mensaje) {
     console.error('Error: ' + mensaje);
 }
 
+<<<<<<< HEAD
 function obtenerDatosParticipante(data) {
     $.ajax({
         url: 'http://127.0.0.1:8000/' + data.dni,
@@ -268,6 +309,17 @@ function obtenerDatosParticipante(data) {
             if (data.valido) {
                 // Si el DNI es válido, rellenar el formulario con la información del participante
                 llenarFormulario(json(data));
+=======
+function obtenerDatosParticipante(dni) {
+    $.ajax({
+        url: 'http://127.0.0.1:8000/' + dni,
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            if (data.valido) {
+                // Si el DNI es válido, rellenar el formulario con la información del participante
+                llenarFormulario(data);
+>>>>>>> fc751f8d465a06f06031e2cf7123d54b25f33b7f
 
                 // Verificar si hay un mensaje de éxito y mostrarlo en la interfaz
                 if (data.success) {
@@ -279,7 +331,10 @@ function obtenerDatosParticipante(data) {
             }
         },
         error: function () {
+<<<<<<< HEAD
             console.log('Error al realizar la solicitud Ajax.');
+=======
+>>>>>>> fc751f8d465a06f06031e2cf7123d54b25f33b7f
             // Error al obtener información del participante
             mostrarError('Error al obtener información del participante.');
         }
@@ -287,6 +342,7 @@ function obtenerDatosParticipante(data) {
 }
 
 function llenarFormulario(data) {
+<<<<<<< HEAD
     console.log('Datos recibidos para llenar el formulario:', data);
 
     // Rellenar el formulario con la información del participante
@@ -298,6 +354,16 @@ function llenarFormulario(data) {
     // Marcar el formulario como "modo de actualización"
     $('#formParticipante').attr('data-update-mode', 'true');
     toggleSection2();
+=======
+    // Rellenar el formulario con la información del participante
+    document.getElementById('nombre_y_apellido').value = data.nombre_y_apellido || '';
+    document.getElementById('email').value = data.email || '';
+    document.getElementById('telefono').value = data.telefono || '';
+    // Otras asignaciones según la estructura de tu formulario
+
+    // Marcar el formulario como "modo de actualización"
+    document.getElementById('formParticipante').setAttribute('data-update-mode', 'true');
+>>>>>>> fc751f8d465a06f06031e2cf7123d54b25f33b7f
 }
 
 

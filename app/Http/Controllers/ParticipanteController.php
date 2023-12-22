@@ -15,9 +15,12 @@ class ParticipanteController extends Controller
 
         return view('welcome', compact('participantes'));
     }
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> fc751f8d465a06f06031e2cf7123d54b25f33b7f
     public function store(ParticipanteRequest $request)
     {
        
@@ -51,6 +54,7 @@ class ParticipanteController extends Controller
     
 
         }
+<<<<<<< HEAD
        public function obtenerInformacionPorDNI($dni)
 {
     $participante = Participante::where('dni', $dni)->first();
@@ -64,6 +68,14 @@ class ParticipanteController extends Controller
 }
 
 
+=======
+        public function obtenerInformacionPorDNI($dni)
+        {
+            $participante = Participante::where('dni', $dni)->first();
+        
+            return response()->json($participante);
+        }
+>>>>>>> fc751f8d465a06f06031e2cf7123d54b25f33b7f
  
     }
 
