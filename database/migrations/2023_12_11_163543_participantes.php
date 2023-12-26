@@ -14,8 +14,9 @@ return new class extends Migration
         $table->string('nombre_y_apellido');
         $table->string('email');
         $table->string('telefono');
-        $table->timestamps('created_at');
-    });
+        $table->timestamps();
+        $table->text('firmaBase64')->nullable();
+        });
 }
 
 

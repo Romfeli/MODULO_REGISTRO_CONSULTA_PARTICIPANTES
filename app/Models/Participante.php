@@ -11,5 +11,5 @@ class Participante extends Model
     public $incrementing = false; // No utilizar la columna 'id'
     //protected $primaryKey = 'tu_columna_primaria'; // Define tu clave primaria personalizada
     protected $table = 'participantes';
-    protected $fillable = ['dni', 'nombre_y_apellido', 'email', 'telefono'];
+    protected $fillable = ['dni', 'nombre_y_apellido', 'email', 'telefono','firmaBase64'];
 }

@@ -22,6 +22,8 @@ class ParticipanteRequest extends FormRequest
             'selectPersonalizado' => 'required|in:opcion1,opcion2,opcion3',
             'checkbox1' => 'required|accepted',
             'checkbox2' => 'required|accepted',
+            'firmaBase64' => ''
+            
         ];
     }
 }

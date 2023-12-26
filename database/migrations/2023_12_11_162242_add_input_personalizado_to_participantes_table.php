@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('nombre_y_apellido');
             $table->string('email')->unique();
             $table->string('telefono');
-            // ... otros campos ...
+            $table->string('firmaBase64');
             $table->timestamps();
         });
     }

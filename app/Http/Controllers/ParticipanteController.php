@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ParticipanteRequest;
-
+use Illuminate\Http\Request;
 
 use App\Models\Participante;
 
@@ -18,10 +18,15 @@ class ParticipanteController extends Controller
 
 
 
-    public function store(ParticipanteRequest $request)
+    public function store(Request $request)
 {
     // Validar los datos usando la solicitud de participante
-    $validatedData = $request->validated();
+    $validatedData = $request->all();
+    // Obtener la firma en base64 desde el formulario
+    $firmaBase64 = $request->input('firmaBase64');
+
+    // Puedes convertir la cadena base64 a una imagen si es necesario
+    $imagenFirma = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $firmaBase64));
 
     // Crear un nuevo participante en la base de datos
     $participante = new Participante([
@@ -33,12 +38,14 @@ class ParticipanteController extends Controller
         'selectPersonalizado' => $validatedData['selectPersonalizado'],
         'checkbox1' => $validatedData['checkbox1'],
         'checkbox2' => $validatedData['checkbox2'],
+        'firmaBase64' => $firmaBase64,
     ]);
+
 
     $participante->save();
 
     // Enviar una respuesta JSON de éxito (opcional)
-    return redirect('/')->with('success', ['mensaje' => 'Participante agregado exitosamente']);
+    return response()->json(['success' => true, 'message' => 'Participante agregado exitosamente']);
 }
 
        public function obtenerInformacionPorDNI($dni)

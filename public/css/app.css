@@ -1,0 +1,32 @@
+.card {
+    width: 18rem;
+    border: 1px solid #ccc; /* Borde gris */
+    border-radius: 0; /* Sin borde redondeado */
+  }
+
+  .card-body {
+    text-align: center;
+  }
+
+  .custom-box {
+    width: 500px;
+    height: 150px;
+    border-radius: 3dvh;
+    border: 1px solid #ccc;
+    margin: 20px auto;
+    padding: 20px;
+    align-content: center;
+    background-color: #ccc;
+  }
+  
+
+  .custom-box-text {
+    margin-bottom: 10px;
+  }
+
+  .custom-buttons {
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+

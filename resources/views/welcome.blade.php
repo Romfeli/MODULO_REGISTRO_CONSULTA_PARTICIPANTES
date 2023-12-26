@@ -5,55 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MODULO_ALTA_PERSONA</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/app.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-   
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+  
+    <script src="{{ asset('js/show_sections.js') }}"></script>
+    <script src="{{ asset('js/Validar_dni.js') }}"></script>
+    <script src="{{ asset('js/alert.js') }}"></script>
+
+
 </head>
 <body>
        
 
-  <style>
-
-
-  .card {
-    width: 18rem;
-    border: 1px solid #ccc; /* Borde gris */
-    border-radius: 0; /* Sin borde redondeado */
-  }
-
-  .card-body {
-    text-align: center;
-  }
-
-  .custom-box {
-    width: 500px;
-    height: 150px;
-    border-radius: 3dvh;
-    border: 1px solid #ccc;
-    margin: 20px auto;
-    padding: 20px;
-    align-content: center;
-    background-color: #ccc;
-  }
-  
-
-  .custom-box-text {
-    margin-bottom: 10px;
-  }
-
-  .custom-buttons {
-    text-align: center;
-    margin-top: 10px;
-  }
-  
-
-
-
-
-</style>
-
-
       <div class="container">
-        <div class="row mt-4">
+        < class="row mt-4">
           <div class="col-12 text-center">
             <div class="custom-box">
               <div class="row">
@@ -67,18 +37,19 @@
                 <div class="col-6">
                   <div class="custom-box-text text-end">
                     <p>Olga Hernandez</p>
-                    <p>{{ $participantes->count() }} participantes</p>
                     <p>Español</p>
                   </div>
                 </div>
               </div>
             </div>
+            <p>{{ $participantes->count() }} participantes</p>
             <div class="custom-buttons">
                 <div class="custom-buttons">
                     <button type="button" class="btn btn-secondary" onclick="toggleSection()">Ver participantes</button>
                     <button type="button" class="btn btn-primary" onclick="toggleSection1()">Añadir participante</button>
                 </div> 
             </div>
+            
           </div>
 
 
@@ -176,153 +147,19 @@
                     <label class="form-check-label" for="checkbox2">Obligatorio</label>
                 </div>
                 <br>
-                <button type="submit" class="btn btn-info"  >FIRMAR Y ENVIAR</button>
+                <button type="button" class="btn btn-info" onclick="toggleSection3()">FIRMAR Y ENVIAR</button>
             </div>
 
             
         </form>
+          
+        </div>
     </div>
+    
 </div>
 
-
-
-
-
-
-
-<script>    
-function toggleSection() {
-    const miSeccion = document.getElementById('miSeccion');
-
-    if (miSeccion.classList.contains('d-none')) {
-        // Mostrar la sección
-        miSeccion.classList.remove('d-none');
-    } else {
-        // Ocultar la sección
-        miSeccion.classList.add('d-none');
-    }
-}
-
-function toggleSection1() {
-    const miSeccion1 = document.getElementById('miSeccion1');
-    const miSeccion2 = document.getElementById('miSeccion2');
-
-    // Mostrar la sección de validación de DNI
-    miSeccion1.classList.remove('d-none');
-
-    // Ocultar la sección 2 (si está visible)
-    miSeccion2.classList.add('d-none');
-}
-
-function toggleSection2() {
-    const miSeccion2 = document.getElementById('miSeccion2');
-
-    // Mostrar la sección 2 del formulario
-    miSeccion2.classList.remove('d-none');
-}
-
-
-
-
-function validarDNI() {
-    var dniInput = document.getElementById('dni');
-    var dniRegex = /^\d{8}$/;
-    
-    if (dniRegex.test(dniInput.value)) {
-        var dni = dniInput.value || '';
-
-        toggleSection2();
-
-        $.ajax({
-            url: 'http://127.0.0.1:8000/' + dni,
-            method: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                console.log('Datos recibidos:', data);
-                
-                obtenerDatosParticipante(data);
-            },
-            error: function () {
-                console.log('Error al realizar la solicitud Ajax.');
-                // Error al verificar el DNI
-                mostrarError('Error al verificar el DNI.');
-            }
-        });
-    } else {
-        // El formato del DNI es inválido
-        mostrarError('El DNI debe contener 8 dígitos numéricos');
-    }
-}
-
-function mostrarError(mensaje) {
-    // Muestra el mensaje de error en algún lugar de tu interfaz de usuario
-    console.error('Error: ' + mensaje);
-}
-
-function obtenerDatosParticipante(data) {
-    $.ajax({
-        url: 'http://127.0.0.1:8000/' + data.dni,
-
-        method: 'GET',
-        dataType: 'json',
-        success: function (data) {
-            console.log('Datos recibidos:', data);
-            if (data) {
-                // Si el DNI es válido, rellenar el formulario con la información del participante
-                llenarFormulario(data);
-
-                // Verificar si hay un mensaje de éxito y mostrarlo en la interfaz
-                if (data.success) {
-                    mostrarExito(data.mensaje);
-                }
-            } else {
-                // DNI inválido
-                mostrarError('No se encontraron datos para el DNI proporcionado.');
-            }
-        },
-        error: function () {
-            console.log('Error al realizar la solicitud Ajax.');
-            // Error al obtener información del participante
-            mostrarError('Error al obtener información del participante.');
-        }
-    });
-}
-
-function llenarFormulario(data) {
-    console.log('Datos recibidos para llenar el formulario:', data);
-
-    // Rellenar el formulario con la información del participante
-    $('#nombre_y_apellido').val(data.nombre_y_apellido || '');
-    $('#email').val(data.email || '');
-    $('#telefono').val(data.telefono || '');
-    // Otras asignaciones según la estructura de tu formulario
-
-    // Marcar el formulario como "modo de actualización"
-    $('#formParticipante').attr('data-update-mode', 'true');
-    toggleSection2();
-}
-
-
-
-function mostrarExito(mensaje) {
-    // Muestra el mensaje de éxito 
-    console.log(mensaje);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</script>
+    <!-- Agrega este contenedor en la parte deseada de tu HTML -->
+    <div id="mensajeRespuesta" class="alert" style="display: none;"></div>
 
 @if ($errors->any())
     <div class="alert alert-danger">
