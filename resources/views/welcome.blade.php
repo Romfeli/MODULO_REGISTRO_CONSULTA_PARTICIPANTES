@@ -96,6 +96,7 @@
                     <th>Nombre y Apellido</th>
                     <th>Email</th>
                     <th>Teléfono</th>
+                    <th>Creacion</th>
                 </tr>
             </thead>
             <tbody>
@@ -105,6 +106,7 @@
                     <td>{{ $participante->nombre_y_apellido }}</td>
                     <td>{{ $participante->email }}</td>
                     <td>{{ $participante->telefono }}</td>
+                    <td>{{ $participante->created_at }}</td>
                 </tr>
                 @endforeach
             </tbody>
@@ -122,7 +124,7 @@
 
 <div class="row mt-4">
     <div class="col-12 text-center">
-        <form id="formParticipante" method="get" action="{{ route('participante.store') }}">
+        <form id="formParticipante" method="post" action="{{ route('participante.store') }}">
             @csrf
 
             <!-- Sección 1 - DNI -->
@@ -229,7 +231,7 @@ function validarDNI() {
     if (dniRegex.test(dniInput.value)) {
         var dni = dniInput.value || '';
 
-        //toggleSection2();
+        toggleSection2();
 
         $.ajax({
             url: 'http://127.0.0.1:8000/' + dni,
@@ -303,10 +305,13 @@ function llenarFormulario(data) {
 
 
 function mostrarExito(mensaje) {
-    // Muestra el mensaje de éxito en algún lugar de tu interfaz de usuario
-    // Puedes usar alert, console.log, o mostrarlo en una etiqueta en tu HTML, por ejemplo
+    // Muestra el mensaje de éxito 
     console.log(mensaje);
 }
+
+
+
+
 
 
 
