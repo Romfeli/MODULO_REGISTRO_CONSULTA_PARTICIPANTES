@@ -14,7 +14,7 @@ class ParticipanteRequest extends FormRequest
     public function rules()
     {
         return [
-            'dni' => 'required|digits:8',
+            'dni' => '',
             'nombre_y_apellido' => 'required|string',
             'email' => 'required|email',
             'telefono' => 'required|numeric',
