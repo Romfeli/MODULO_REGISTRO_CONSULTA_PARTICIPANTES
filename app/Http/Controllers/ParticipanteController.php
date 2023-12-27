@@ -48,6 +48,11 @@ class ParticipanteController extends Controller
     return response()->json(['success' => true, 'message' => 'Participante agregado exitosamente']);
 }
 
+
+
+
+
+
        public function obtenerInformacionPorDNI($dni)
 {
     $participante = Participante::where('dni', $dni)->first();

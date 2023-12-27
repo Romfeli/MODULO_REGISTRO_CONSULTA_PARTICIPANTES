@@ -99,9 +99,10 @@ function mostrarMensaje(esExitoso, mensaje) {
         mensajeElemento.classList.remove('alert-success');
         mensajeElemento.classList.add('alert-danger');
     }
-
+    
     mensajeElemento.innerHTML = mensaje;
     mensajeElemento.style.display = 'block';
+    location.reload(true);
 }
 
                 

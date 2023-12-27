@@ -12,11 +12,13 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-  
+
+
     <script src="{{ asset('js/show_sections.js') }}"></script>
     <script src="{{ asset('js/Validar_dni.js') }}"></script>
     <script src="{{ asset('js/alert.js') }}"></script>
 
+    
 
 </head>
 <body>
@@ -42,7 +44,9 @@
                 </div>
               </div>
             </div>
-            <p>{{ $participantes->count() }} participantes</p>
+            
+    <p id="participantesCount">{{ $participantes->count() }} participantes</p>
+
             <div class="custom-buttons">
                 <div class="custom-buttons">
                     <button type="button" class="btn btn-secondary" onclick="toggleSection()">Ver participantes</button>
@@ -118,6 +122,10 @@
                 <input type="tel" name="telefono" id="telefono" class="form-control-sm" placeholder="TELEFONO" required>
             </div>
 
+
+
+
+            
             <div class="mb-3">
                 <input type="text" name="inputPersonalizado" id="inputPersonalizado" class="form-control-sm" placeholder="INPUT">
             </div>
