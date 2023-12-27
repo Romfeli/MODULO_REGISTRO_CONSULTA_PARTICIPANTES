@@ -23,7 +23,7 @@
        
 
       <div class="container">
-        < class="row mt-4">
+        
           <div class="col-12 text-center">
             <div class="custom-box">
               <div class="row">
@@ -36,7 +36,7 @@
                 </div>
                 <div class="col-6">
                   <div class="custom-box-text text-end">
-                    <p>Olga Hernandez</p>
+                
                     <p>Español</p>
                   </div>
                 </div>
