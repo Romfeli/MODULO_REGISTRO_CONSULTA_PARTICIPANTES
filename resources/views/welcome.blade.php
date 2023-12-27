@@ -18,11 +18,32 @@
     <script src="{{ asset('js/Validar_dni.js') }}"></script>
     <script src="{{ asset('js/alert.js') }}"></script>
 
-    
+ <!-- Agrega estos enlaces en la sección head de tu HTML -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+
 
 </head>
 <body>
-       
+    
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var input = document.querySelector("#telefono");
+        var mensajeRespuesta = document.querySelector("#mensajeRespuesta");
+
+        // Inicializa el campo de teléfono con intl-tel-input
+        var iti = window.intlTelInput(input, {
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        });
+
+        // Utiliza el evento countrychange para mostrar un mensaje en el contenedor
+        input.addEventListener('countrychange', function (e) {
+            var countryData = iti.getSelectedCountryData();
+            var mensaje = "País seleccionado: " + countryData.name;
+
+        });
+    });
+</script>
 
       <div class="container">
         
@@ -35,6 +56,7 @@
                     <p>12:45 13:30</p>
                     <p>El virus</p>
                   </div>
+                 
                 </div>
                 <div class="col-6">
                   <div class="custom-box-text text-end">
@@ -119,8 +141,8 @@
             </div>
 
             <div class="mb-1">
-                <input type="tel" name="telefono" id="telefono" class="form-control-sm" placeholder="TELEFONO" required>
-            </div>
+    <input type="tel" name="telefono" id="telefono" class="form-control-sm" placeholder="TELEFONO" required>
+</div>
 
 
 
